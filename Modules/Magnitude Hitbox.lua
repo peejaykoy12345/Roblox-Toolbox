@@ -13,6 +13,7 @@ function Hitbox.Basic(hrp: BasePart, target: Model, range: number)
 end
 
 function Hitbox.Complex(hrp: BasePart, range: number)
+	local targets = {}
 	for _, obj in pairs(workspace:GetChildren()) do
 		if obj:IsA("Model") and obj ~= hrp.Parent then
 			local humanoid = obj:FindFirstChildWhichIsA("Humanoid")
@@ -20,14 +21,30 @@ function Hitbox.Complex(hrp: BasePart, range: number)
 			if humanoid and root then
 				if Hitbox.Basic(hrp, obj, range) then
 					if obj ~= nil then
-						return obj
-					else
-						return
+						table.insert(targets, obj)
 					end
 				end
 			end
 		end
 	end
+	return targets
+end
+
+function Hitbox.AOE(hrp: BasePart, range: number)
+	local targets = {}
+	for _, model in pairs (workspace:GetChildren()) do
+		if model:IsA("Model") and model ~= hrp.Parent then
+			local root = model:FindFirstChild("HumanoidRootPart")
+			local humanoid = model:FindFirstChild("Humanoid")
+			if root and humanoid and humanoid.Health > 0 then
+				local distance = (root.Position - hrp.Position).Magnitude
+				if distance <= range then
+					table.insert(targets, model)
+				end
+			end
+		end
+	end
+	return targets
 end
 
 return Hitbox
