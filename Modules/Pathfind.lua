@@ -40,7 +40,7 @@ local function followPath(Human, Torso, goalPosition)
 end
 
 function Pathfind.Basic()
-	function Pathfind.Complex(Rig, closestPlayer)
+	function Pathfind.Complex(Rig: Model, closestPlayer: Player)
 		local Human = Rig:WaitForChild("Humanoid")
 		local Torso = Rig:FindFirstChild("UpperTorso") or Rig:WaitForChild("HumanoidRootPart")
 
@@ -60,7 +60,7 @@ function Pathfind.Basic()
 	end
 end
 
-function Pathfind.Complex(Rig)
+function Pathfind.Complex(Rig: Model)
 	local Human = Rig:WaitForChild("Humanoid")
 	local Torso = Rig:FindFirstChild("UpperTorso") or Rig:WaitForChild("HumanoidRootPart")
 
@@ -98,7 +98,7 @@ function Pathfind.Complex(Rig)
 	end)
 end
 
-function Pathfind.Clone(sourcePlr, Rig)
+function Pathfind.Clone(sourcePlr: Player, Rig: Model)
 	local Human = Rig:WaitForChild("Humanoid")
 	local Torso = Rig:FindFirstChild("UpperTorso") or Rig:WaitForChild("HumanoidRootPart")
 
@@ -138,7 +138,7 @@ function Pathfind.Clone(sourcePlr, Rig)
 	end)
 end
 
-function Pathfind.Object(Rig, object)
+function Pathfind.Object(Rig: Model, object)
 	local Human = Rig:WaitForChild("Humanoid")
 	local Torso = Rig:FindFirstChild("UpperTorso") or Rig:WaitForChild("HumanoidRootPart")
 
@@ -153,3 +153,5 @@ function Pathfind.Object(Rig, object)
 		end
 	end)
 end
+
+return Pathfind
