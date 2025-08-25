@@ -2,7 +2,7 @@ local Damage = {}
 
 local DamageDebounce = {}
 
-function Damage.ApplyDamageFromMeshTouchEvent(char: Model, hit: Model, damage: number)
+function Damage.ApplyDamage(char: Model, hit: Model, damage: number)
 	local isPlayer = not char:GetAttribute("BotID")
 	local attackerID = isPlayer and game.Players:GetPlayerFromCharacter(char).UserId or char:GetAttribute("BotID")
 	local targetID = hit:GetAttribute("BotID") or (game.Players:GetPlayerFromCharacter(hit) and game.Players:GetPlayerFromCharacter(hit).UserId)
@@ -23,4 +23,4 @@ function Damage.ApplyDamageFromMeshTouchEvent(char: Model, hit: Model, damage: n
 			DamageDebounce[debounceKey] = false
 		end)
 	end
-en
+end
