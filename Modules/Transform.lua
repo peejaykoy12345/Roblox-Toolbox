@@ -1,28 +1,50 @@
 local module = {}
-local CollectionService = game:GetService("CollectionService")
 
-function module.Transform(plr: Player, model_template: Model)
-	local char = plr.Character
-	local hum = char:FindFirstChildWhichIsA("Humanoid")
-	
-	hum.BodyHeightScale.Value = 5
-	hum.BodyWidthScale.Value = 5
-	hum.BodyDepthScale.Value = 5
-	hum.HeadScale.Value = 5
-	
-	local model = model_template:Clone()
+local function SetCharacterVisibility(char: Model, visible: boolean)
+	local transperancy = if visible then 0 else 1
+	local canCollide = if visible then true else false
 	
 	for _, part in pairs(char:GetDescendants()) do
 		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-			part.Transparency = 1
-			part.CanCollide = false
+			part.Transparency = transperancy
+			part.CanCollide = canCollide
 		end
 		if part.Name == "face" then
-			part.Transparency = 1
+			part.Transparency = transperancy
 		end
 	end
+end
+
+local function RemoveTransformModel(char: Model)
+	local transformed_model = char:FindFirstChild("TransformModel")
+	if not transformed_model then return end
+
+	transformed_model:Destroy()
+end
+
+local function SetScaleValue(hum: Humanoid, scale_value: number)
+	hum.BodyHeightScale.Value = scale_value
+	hum.BodyWidthScale.Value = scale_value
+	hum.BodyDepthScale.Value = scale_value
+	hum.HeadScale.Value = scale_value
+end
+
+function module.Transform(plr: Player, model_template: Model, scale_value: number)
+	local char = plr.Character
+	local hum = char:FindFirstChildWhichIsA("Humanoid")
+	
+	scale_value = scale_value or 1
+	
+	RemoveTransformModel(char)
+	
+	SetScaleValue(hum, scale_value)
+	
+	local model = model_template:Clone()
+	
+	SetCharacterVisibility(char, false)
+	
 	model.Parent = char
-	model:AddTag("Model")
+	model.Name = "TransformModel"
 	model:PivotTo(char:GetPivot())
 	local weld = Instance.new("Weld", model)
 	weld.Part0 = model.HumanoidRootPart
@@ -33,24 +55,10 @@ function module.Untransform(plr: Player)
 	local char = plr.Character
 	local hum = char:FindFirstChildWhichIsA("Humanoid")
 
-	hum.BodyHeightScale.Value = 1
-	hum.BodyWidthScale.Value = 1
-	hum.BodyDepthScale.Value = 1
-	hum.HeadScale.Value = 1
+	SetScaleValue(hum, 1)
 	
-	for _, part in pairs(char:GetDescendants()) do
-		if CollectionService:HasTag(part, "Model") then
-			part:Destroy()
-			continue
-		end
-		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
-			part.Transparency = 0
-			part.CanCollide = false
-		end
-		if part.Name == "face" then
-			part.Transparency = 0
-		end
-	end
+	RemoveTransformModel(char)
+	SetCharacterVisibility(char, true)
 end
 
 return module
