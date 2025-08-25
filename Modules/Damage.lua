@@ -24,3 +24,5 @@ function Damage.ApplyDamage(char: Model, hit: Model, damage: number)
 		end)
 	end
 end
+
+return Damage
